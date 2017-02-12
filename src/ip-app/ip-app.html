@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/file-upload/file-upload.html">
+
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 
@@ -10,7 +9,9 @@
 
 <dom-module id="ip-app">
   <template>
-    <style include="shared-styles"></style>
+    <style include="shared-styles">
+      p { text-align: center; }
+    </style>
 
     <paper-progress id="progress" indeterminate></paper-progress>
 
@@ -34,7 +35,7 @@
     >
     </paper-textarea>
 
-    <center><small>Connected to {{peers}} peers.</small></center>
+    <p><small>Connected to {{peers}} peers.</small></p>
   </template>
 
   <script>
@@ -60,12 +61,12 @@
 
       uploadForever: function() {
         this.$.progress.style.visibility = "visible";
-        document.body.dispatchEvent(new CustomEvent('write-file', {
+        document.body.dispatchEvent(new CustomEvent('add-file', {
           detail: this.$.paste.value
         }));
 
-        document.body.addEventListener('new-file', function(e) {
-          window.location = "/#" + e.detail.Hash;
+        document.body.addEventListener('file-added', function(e) {
+          window.location = "/#" + e.detail;
           window.location.reload();
         }.bind(this))
       },

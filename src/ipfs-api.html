@@ -36,19 +36,12 @@
         .catch(function(err) {console.log(err)})
       },
 
-      writeFile: function(e) {
-        var usethisfornow = new Date().getTime();
-
-        this.ipfs.files.write('/' + usethisfornow, [new buffer.Buffer(e.detail)], {create: true}).then(
-          function(e,f,b) {
-            this.ipfs.files.stat('/' + usethisfornow).then(function(res) {
-               document.body.dispatchEvent(new CustomEvent('new-file', { detail: res }));
-            })
-            .catch(function(err) {
-              console.log(err)
-            });
-
-//            document.body.dispatchEvent(new CustomEvent('file', { detail: result }));
+      addFile: function(e) {
+        this.ipfs.add([new buffer.Buffer(e.detail)]).then(
+          function(result) {
+            document.body.dispatchEvent(new CustomEvent('file-added', {
+              detail: result[0].hash
+            }));
           }.bind(this))
           .catch(function(err) {
             console.log(err)
@@ -60,7 +53,7 @@
 
         document.body.addEventListener('get-swarm-peers', this.getSwarmPeers.bind(this));
         document.body.addEventListener('get-file', this.getFile.bind(this));
-        document.body.addEventListener('write-file', this.writeFile.bind(this));
+        document.body.addEventListener('add-file', this.addFile.bind(this));
       }
     })
   </script>
