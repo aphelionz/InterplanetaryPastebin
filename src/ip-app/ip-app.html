@@ -1,0 +1,92 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/file-upload/file-upload.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input-container.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+
+<link rel="import" href="./shared-styles.html">
+<link rel="import" href="../ipfs-api.html">
+
+<dom-module id="ip-app">
+  <template>
+    <style include="shared-styles"></style>
+
+    <paper-progress id="progress" indeterminate></paper-progress>
+
+    <header>
+      <div>
+        <h1>the interplanetary pastebin</h1>
+        <small>
+          A permanent paste bin powered by
+          <a style="color: white" href="http://ipfs.io/" target="_blank">ipfs</a>
+        </small>
+      </div>
+      <paper-button id="uploadBtn" on-tap="uploadForever" raised>Upload Forever</paper-button>
+    </header>
+
+    <paper-textarea
+        id="paste"
+        on-keyup="showButton"
+        max-rows="20"
+        rows="20"
+        label="Paste content here"
+    >
+    </paper-textarea>
+
+    <center><small>Connected to {{peers}} peers.</small></center>
+  </template>
+
+  <script>
+    Polymer({
+
+    is: 'ip-app',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'ip-app'
+        },
+        peers: {
+          notify: true,
+          type: Number,
+          value: 0
+        }
+      },
+
+      showButton: function() {
+        this.$.uploadBtn.classList.add('visible');
+      },
+
+      uploadForever: function() {
+        this.$.progress.style.visibility = "visible";
+        document.body.dispatchEvent(new CustomEvent('write-file', {
+          detail: this.$.paste.value
+        }));
+
+        document.body.addEventListener('new-file', function(e) {
+          window.location = "/#" + e.detail.Hash;
+          window.location.reload();
+        }.bind(this))
+      },
+
+      ready: function() {
+        if(window.location.hash) {
+          document.body.dispatchEvent(new CustomEvent('get-file', {
+            detail: window.location.hash.substr(1)
+          }));
+        }
+
+        document.body.dispatchEvent(new CustomEvent('get-swarm-peers'));
+        document.body.addEventListener('peers', function(e) {
+          this.peers = e.detail.length;
+        }.bind(this));
+
+        document.body.addEventListener('file-read', function(e) {
+          this.$.paste.value = e.detail;
+        }.bind(this)
+        )
+      }
+    });
+  </script>
+</dom-module>

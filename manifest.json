@@ -1,0 +1,7 @@
+{
+  "name": "InterplanetaryPastebin",
+  "short_name": "InterplanetaryPastebin",
+  "description": "Interplanetary Pastebin",
+  "start_url": "/",
+  "display": "standalone"
+}

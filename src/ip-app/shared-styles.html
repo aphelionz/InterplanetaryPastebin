@@ -1,0 +1,69 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="shared-styles">
+  <style>
+    :host {
+      color: white;
+      font-family: monospace;
+      max-width: 1024px;
+      margin: 0 auto;
+      display: block;
+
+      --iron-autogrow-textarea: {
+        font-family: monospace !important;
+        color: white !important;
+      };
+
+      --paper-input-container: {
+        background: rgba(0,0,0,0.67);
+      };
+
+      --paper-input-container-color: black;
+      --paper-input-container-focus-color: limegreen;
+
+      --paper-input-container-label: {
+        color: lightgreen;
+        font-family: monospace;
+      };
+
+      --paper-input-container-label-focus: {
+        color: white;
+      };
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1em;
+      padding: 1em 0 0;
+    }
+
+    paper-button {
+      opacity: 0;
+      transition: opacity 2s ease;
+      background: lightgreen;
+      font-family: monospace;
+      color: black;
+      font-size: 18px;
+      padding: 0 auto;
+      letter-spacing: 2px;
+    }
+
+    paper-button.visible {
+      opacity: 1;
+    }
+
+    ::-webkit-scrollbar-track {
+      display: none;
+    }
+
+    paper-progress {
+      width: 100%;
+      visibility: hidden;
+    }
+  </style>
+</dom-module>
