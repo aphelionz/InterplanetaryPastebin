@@ -5,7 +5,6 @@
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 
 <link rel="import" href="./shared-styles.html">
-<link rel="import" href="../ipfs-api.html">
 
 <dom-module id="ip-app">
   <template>
@@ -44,15 +43,18 @@
     is: 'ip-app',
 
       properties: {
-        prop1: {
-          type: String,
-          value: 'ip-app'
-        },
         peers: {
           notify: true,
           type: Number,
           value: 0
         }
+      },
+
+      _getPeers: function() {
+        document.body.dispatchEvent(new CustomEvent('get-swarm-peers'));
+          document.body.addEventListener('peers', function(e) {
+          this.peers = e.detail.length;
+        }.bind(this));
       },
 
       showButton: function() {
@@ -78,10 +80,8 @@
           }));
         }
 
-        document.body.dispatchEvent(new CustomEvent('get-swarm-peers'));
-        document.body.addEventListener('peers', function(e) {
-          this.peers = e.detail.length;
-        }.bind(this));
+        setInterval(this._getPeers.bind(this), 10000);
+        this._getPeers();
 
         document.body.addEventListener('file-read', function(e) {
           this.$.paste.value = e.detail;

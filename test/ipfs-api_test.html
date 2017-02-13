@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>ip-app test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../src/ipfs-api.html">
+
+    <script src="https://unpkg.com/ipfs-api/dist/index.js"></script>
+    <script src="../js/buffer.js"></script>
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <ipfs-api></ipfs-api>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('ipfs-api', function() {
+        test('instantiating the element works', function() {
+          var element = fixture('basic');
+          assert.equal(element.is, 'ipfs-api');
+        });
+
+        test('this.ipfs is properly defined', function(done) {
+          var element = fixture('basic');
+          element.ipfs.version().then(function() {
+            done();
+          })
+        });
+
+        test('element dispatches file-added event', function(done) {
+          var element = fixture('basic');
+          document.body.addEventListener('file-added', function() {
+            done();
+          });
+          element.addFile({ detail: "test 123" });
+        });
+
+        test('element dispatches peers event', function(done) {
+          var element = fixture('basic');
+          var test = function(e) {
+            done();
+            document.body.removeEventListener('peers', test);
+          };
+
+          document.body.addEventListener('peers', test);
+          element.getSwarmPeers();
+        });
+
+        test('element dispatches file-read event', function(done) {
+          var element = fixture('basic');
+          document.body.addEventListener('file-read', function(e) {
+            done();
+          });
+          element.getFile({ detail: "QmPk5AgZgrDbsdXTWJfMVZQdWhpSLVU8Sb6n19SUyjSugR" });
+        });
+
+        test("element responds to 'get-swarm-peers' with 'peers'", function(done) {
+          var element = fixture('basic');
+          var test = function(e) {
+            done();
+            document.body.removeEventListener('peers', test);
+          };
+
+          document.body.addEventListener('peers', test);
+          document.body.dispatchEvent(new CustomEvent('get-swarm-peers'));
+        });
+
+        test('element responds to get-file event', function() {
+          var element = fixture('basic');
+          var test = function(e) {
+            done();
+            document.body.removeEventListener('file-read', test);
+          };
+
+          document.body.addEventListener('file-read', test);
+          document.body.dispatchEvent(new CustomEvent('get-file'));
+        });
+
+        test('element responds to add-file event', function() {
+          var element = fixture('basic');
+          var test = function(e) {
+            done();
+            document.body.removeEventListener('file-added', test);
+          };
+
+          document.body.addEventListener('file-added', test);
+          document.body.dispatchEvent(new CustomEvent('add-file', { detail: "xxxyyy" }));
+        });
+      });
+    </script>
+  </body>
+</html>

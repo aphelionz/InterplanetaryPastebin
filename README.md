@@ -54,9 +54,8 @@ $ polymer serve build/bundled
 ```
 
 ## Running Tests
+Note that the tests also require an the ipfs daemon running locally.
 
 ```
 $ polymer test
 ```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.

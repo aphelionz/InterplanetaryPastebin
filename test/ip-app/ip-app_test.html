@@ -24,6 +24,58 @@
           var element = fixture('basic');
           assert.equal(element.is, 'ip-app');
         });
+
+        test('default element properties are set', function() {
+          var element = fixture('basic');
+          assert.equal(element.peers, 0)
+        });
+
+        test('upload button is visible', function() {
+          var element = fixture('basic');
+          element.showButton();
+          assert.equal(element.$.uploadBtn.classList.contains('visible'), true);
+        });
+
+        test('element dispatches get-swarm-peers event', function(done) {
+          var element = fixture('basic');
+          var test = function() {
+            assert.equal(element.is, 'ip-app');
+            done();
+            document.body.removeEventListener('get-swarm-peers', test);
+          };
+
+          document.body.addEventListener('get-swarm-peers', test);
+          element._getPeers()
+        });
+
+        test('element responds to peers', function(done) {
+          var element = fixture('basic');
+          document.body.addEventListener('peers', function() {
+            assert.equal(element.peers, 3);
+            done();
+          });
+          document.body.dispatchEvent(new CustomEvent('peers', { detail: [1,2,3] }));
+        });
+
+        test('upload button shows progress bar', function() {
+          var element = fixture('basic');
+          element.$.uploadBtn.click();
+          assert.equal(element.$.progress.style.visibility, 'visible');
+        });
+
+        test('upload button dispatches add-file event', function() {
+          var element = fixture('basic');
+          var test = function() {
+            assert.equal(element.is, 'ip-app');
+            done();
+            document.body.removeEventListener('add-file', test);
+          };
+
+          document.body.addEventListener('add-file', test);
+        });
+
+        test('file added updates hash and reloads page');
+        test('document with hash dispatches get-file event');
       });
     </script>
   </body>

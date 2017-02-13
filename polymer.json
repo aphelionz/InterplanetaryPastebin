@@ -1,0 +1,15 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/ip-app/ip-app.html",
+  "fragments": [
+  ],
+  "sources": [
+    "src/**/*",
+    "img/**/*",
+    "js/**/*",
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}

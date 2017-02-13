@@ -10,7 +10,7 @@
     <!-- See https://goo.gl/OOhYW5 -->
     <link rel="manifest" href="/manifest.json">
 
-    <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
 
     <link rel="import" href="/src/ip-app/ip-app.html">
     <link rel="import" href="/src/ipfs-api.html">
@@ -20,11 +20,19 @@
         background: black url('/img/source.gif');
         margin: 0;
       }
+
+      .overlay {
+        background: rgba(0,0,0,0.5);
+        position: fixed;
+        z-index: -98;
+        width: 100%;
+        height: 100%
+      }
     </style>
     <script src="https://unpkg.com/ipfs-api/dist/index.js"></script>
     <script src="/js/buffer.js"></script>
   </head>
-    <div style="background: rgba(0,0,0,0.5); position: fixed; z-index: -98; width: 100%; height: 100%"></div>
+    <div style=""></div>
     <ipfs-api></ipfs-api>
     <ip-app></ip-app>
   </body>

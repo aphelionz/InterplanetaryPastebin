@@ -29,7 +29,7 @@
         })
       },
 
-      getSwarmPeers: function(e) {
+      getSwarmPeers: function() {
         this.ipfs.swarm.peers().then(function(peers) {
           document.body.dispatchEvent(new CustomEvent('peers', { detail: peers }));
         })
