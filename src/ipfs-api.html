@@ -13,14 +13,13 @@
       },
 
       getFile: function(e) {
-        this.ipfs.get(e.detail).then(function(objstream) {
+        this.ipfs.cat(e.detail).then(function(objstream) {
           chunks = '';
 
           objstream.on('data', function (obj) {
-            obj.content.on('data', function(e,f,b) {
-              chunks += e.toString();
-            })
+            chunks += obj.toString();
           });
+
           objstream.on('end', function () {
             document.body.dispatchEvent(new CustomEvent('file-read', { detail: chunks }));
           });
