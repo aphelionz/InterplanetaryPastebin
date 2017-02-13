@@ -3,9 +3,6 @@
 The Interplanetary Pastebin is a pastebin application
 It is meant to run **locally**.
 
-#### TODO:
-- Tests
-
 ## Dependencies
 
 You must have the IPFS daemon running on the same machine as the pastebin app.
