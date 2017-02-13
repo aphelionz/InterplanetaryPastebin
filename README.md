@@ -5,32 +5,39 @@ It is meant to run **locally**.
 
 #### TODO:
 - Tests
-- 
+- Pre-built distros
 
 ## Dependencies
 
-- Dependencies:
-  - golang
-  - go-ipfs
-- Development dependencies:
-  - node
-  - npm
-  - bower
-  - polymer-cli
+You must have the IPFS daemon running on the same machine as the pastebin app.
+
+**Step 1:** Install [go-ipfs](http://ipfs.io/docs/install/). You must have the IPFS daemon running.
 
 ## Installation and Usage
 
-Configure headers, then run the ipfs daemon:
+**Step 2:** Configure headers, then run the ipfs daemon:
 ```
-$ Set headers
+$ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["localhost"]'
+$ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
+$ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
 $ ipfs daemon
 ``` 
 
-If you simply want to run and/or serve the pastebin, 
+This will open the ipfs HTTP API on port 5001, allowing for the pastebin to write to the interplanetary filesystem.
+
+If you simply want to run and/or serve the pastebin, you can download a distro here (TODO)
+
+## Development
+
 For development, you will need to install Node, npm and the [Polymer CLI](https://www.npmjs.com/package/polymer-cli).
 
+Then, from inside the root directory, run:
 
-## Building Your Application
+```
+$ polymer serve
+```
+
+## Building the App
 
 ```
 $ polymer build
