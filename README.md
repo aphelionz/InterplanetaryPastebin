@@ -1,16 +1,34 @@
-# \<InterplanetaryPastebin\>
+# The Interplanetary Pastebin
 
-Interplanetary Pastebin
+The Interplanetary Pastebin is a pastebin application
+It is meant to run **locally**.
 
-## Install the Polymer-CLI
+#### TODO:
+- Tests
+- 
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
+## Dependencies
 
-## Viewing Your Application
+- Dependencies:
+  - golang
+  - go-ipfs
+- Development dependencies:
+  - node
+  - npm
+  - bower
+  - polymer-cli
 
+## Installation and Usage
+
+Configure headers, then run the ipfs daemon:
 ```
-$ polymer serve
-```
+$ Set headers
+$ ipfs daemon
+``` 
+
+If you simply want to run and/or serve the pastebin, 
+For development, you will need to install Node, npm and the [Polymer CLI](https://www.npmjs.com/package/polymer-cli).
+
 
 ## Building Your Application
 
