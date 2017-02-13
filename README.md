@@ -5,7 +5,6 @@ It is meant to run **locally**.
 
 #### TODO:
 - Tests
-- Pre-built distros
 
 ## Dependencies
 
