@@ -1,5 +1,3 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-
 <dom-module id="shared-styles">
   <style>
     :host {
@@ -42,18 +40,20 @@
       padding: 1em 0 0;
     }
 
-    paper-button {
+    button {
       opacity: 0;
-      transition: opacity 2s ease;
+      transition: opacity 1s ease-in-out;
       background: lightgreen;
       font-family: monospace;
       color: black;
       font-size: 18px;
       padding: 0 auto;
       letter-spacing: 2px;
+      border: none;
+      border-radius: 5px;
     }
 
-    paper-button.visible {
+    button[visible] {
       opacity: 1;
     }
 
@@ -64,6 +64,10 @@
     paper-progress {
       width: 100%;
       visibility: hidden;
+    }
+
+    paper-progress[visible] {
+      visibility: visible;
     }
   </style>
 </dom-module>

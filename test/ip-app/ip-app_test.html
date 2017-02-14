@@ -32,8 +32,8 @@
 
         test('upload button is visible', function() {
           var element = fixture('basic');
-          element.showButton();
-          assert.equal(element.$.uploadBtn.classList.contains('visible'), true);
+          element.hasContent = true;
+          assert.equal(!!element.getElementsByTagName('button')[0].attributes.visible, true);
         });
 
         test('element dispatches get-swarm-peers event', function(done) {
@@ -59,8 +59,8 @@
 
         test('upload button shows progress bar', function() {
           var element = fixture('basic');
-          element.$.uploadBtn.click();
-          assert.equal(element.$.progress.style.visibility, 'visible');
+          element.getElementsByTagName('button')[0].click();
+          assert.equal(!!element.getElementsByTagName('paper-progress')[0].attributes.visible, true);
         });
 
         test('upload button dispatches add-file event', function() {

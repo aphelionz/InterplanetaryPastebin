@@ -8,16 +8,16 @@
     <meta name="description" content="InterplanetaryPastebin description">
 
     <!-- See https://goo.gl/OOhYW5 -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
 
-    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
 
-    <link rel="import" href="/src/ip-app/ip-app.html">
-    <link rel="import" href="/src/ipfs-api.html">
+    <link rel="import" href="src/ip-app/ip-app.html">
+    <link rel="import" href="src/ipfs-api.html">
 
     <style>
       body {
-        background: black url('/img/source.gif');
+        background: black url('./img/source.gif');
         margin: 0;
       }
 
@@ -30,9 +30,9 @@
       }
     </style>
     <script src="https://unpkg.com/ipfs-api/dist/index.js"></script>
-    <script src="/js/buffer.js"></script>
+    <script defer src="js/buffer.js"></script>
   </head>
-    <div style=""></div>
+    <div class="overlay"></div>
     <ipfs-api></ipfs-api>
     <ip-app></ip-app>
   </body>

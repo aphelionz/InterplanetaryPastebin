@@ -1,7 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 
 <link rel="import" href="./shared-styles.html">
@@ -12,7 +10,7 @@
       p { text-align: center; }
     </style>
 
-    <paper-progress id="progress" indeterminate></paper-progress>
+    <paper-progress visible$="{{isUploading}}" id="progress" indeterminate></paper-progress>
 
     <header>
       <div>
@@ -22,14 +20,14 @@
           <a style="color: white" href="http://ipfs.io/" target="_blank">ipfs</a>
         </small>
       </div>
-      <paper-button id="uploadBtn" on-tap="uploadForever" raised>Upload Forever</paper-button>
+      <button visible$="{{hasContent}}" on-tap="uploadForever">Upload Forever</button>
     </header>
 
     <paper-textarea
         id="paste"
         on-keyup="showButton"
-        max-rows="20"
-        rows="20"
+        max-rows="17"
+        rows="17"
         label="Paste content here"
     >
     </paper-textarea>
@@ -47,6 +45,16 @@
           notify: true,
           type: Number,
           value: 0
+        },
+        hasContent: {
+          notify: true,
+          type: Boolean,
+          value: false
+        },
+        isUploading: {
+          notify: true,
+          type: Boolean,
+          value: false
         }
       },
 
@@ -57,12 +65,10 @@
         }.bind(this));
       },
 
-      showButton: function() {
-        this.$.uploadBtn.classList.add('visible');
-      },
+      showButton: function() { this.hasContent = true; },
 
       uploadForever: function() {
-        this.$.progress.style.visibility = "visible";
+        this.isUploading = true;
         document.body.dispatchEvent(new CustomEvent('add-file', {
           detail: this.$.paste.value
         }));
