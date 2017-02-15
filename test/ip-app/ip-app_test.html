@@ -74,8 +74,13 @@
           document.body.addEventListener('add-file', test);
         });
 
-        test('file added updates hash and reloads page');
-        test('document with hash dispatches get-file event');
+        test('key change dispatches get-file event', function(done) {
+          var element = fixture('basic');
+          document.body.addEventListener('get-file', function() {
+            done();
+          });
+          element.key = "lalalal";
+        });
       });
     </script>
   </body>

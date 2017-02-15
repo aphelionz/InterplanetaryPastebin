@@ -34,6 +34,19 @@
   </head>
     <div class="overlay"></div>
     <ipfs-api></ipfs-api>
-    <ip-app></ip-app>
+    <ip-app id="app"></ip-app>
+
+    <script>
+      if(window.location.hash) {
+        document.getElementById('app').key = window.location.hash.substr(1);
+      }
+
+      document.body.addEventListener('file-added', function(e) {
+        window.location = "/#" + e.detail;
+        document.getElementById('app').key = window.location.hash.substr(1);
+        document.getElementById('app').isUploading = false;
+        document.getElementById('app').hasContent = false;
+      });
+    </script>
   </body>
 </html>
