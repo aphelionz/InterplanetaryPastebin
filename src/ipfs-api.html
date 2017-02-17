@@ -5,6 +5,8 @@
 
 <dom-module id="ipfs-api">
   <script>
+    "use strict";
+
     Polymer({
       is: "ipfs-api",
 
@@ -15,39 +17,40 @@
         }
       },
 
+      _fireBodyEvent: function(eventName, detail) {
+        document.body.dispatchEvent(new CustomEvent(eventName, { detail }));
+      },
+
+      _logError: function(err) {
+        console.error(err);
+      },
+
+      _processObjectStream: function(objstream) {
+        let chunks = '';
+
+        objstream.on('data', (obj) => {
+          chunks += obj.toString();
+        }).once('end', () => {
+          this._fireBodyEvent('file-read', chunks);
+        });
+      },
+
       getFile: function(e) {
-        this.ipfs.cat(e.detail).then(function(objstream) {
-          chunks = '';
-
-          objstream.on('data', function (obj) {
-            chunks += obj.toString();
-          });
-
-          objstream.on('end', function () {
-            document.body.dispatchEvent(new CustomEvent('file-read', { detail: chunks }));
-          });
-        }).catch(function(err) {
-          console.log(err);
-        })
+        this.ipfs.cat(e.detail)
+          .then((objstream) => this._processObjectStream(objstream))
+          .catch(this._logError);
       },
 
       getSwarmPeers: function() {
-        this.ipfs.swarm.peers().then(function(peers) {
-          document.body.dispatchEvent(new CustomEvent('peers', { detail: peers }));
-        })
-        .catch(function(err) {console.log(err)})
+        this.ipfs.swarm.peers()
+          .then((peers) => this._fireBodyEvent('peers', peers))
+          .catch(this._logError);
       },
 
       addFile: function(e) {
-        this.ipfs.add([new buffer.Buffer(e.detail)]).then(
-          function(result) {
-            document.body.dispatchEvent(new CustomEvent('file-added', {
-              detail: result[0].hash
-            }));
-          }.bind(this))
-          .catch(function(err) {
-            console.log(err)
-          })
+        this.ipfs.add([new buffer.Buffer(e.detail)])
+          .then((result) => this._fireBodyEvent('file-added', result[0].hash))
+          .catch(this._logError);
       },
 
       ready: function() {
@@ -56,6 +59,12 @@
         document.body.addEventListener('get-swarm-peers', this.getSwarmPeers.bind(this));
         document.body.addEventListener('get-file', this.getFile.bind(this));
         document.body.addEventListener('add-file', this.addFile.bind(this));
+      },
+
+      detached: function() {
+        document.body.removeEventListener('get-swarm-peers', this.getSwarmPeers.bind(this));
+        document.body.removeEventListener('get-file', this.getFile.bind(this));
+        document.body.removeEventListener('add-file', this.addFile.bind(this));
       }
     })
   </script>
