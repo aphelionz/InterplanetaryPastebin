@@ -1,5 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
+<script src="https://unpkg.com/ipfs-api/dist/index.js"></script>
+<script src="../js/buffer.js"></script>
+
 <dom-module id="ipfs-api">
   <script>
     "use strict";
@@ -12,6 +15,24 @@
           type: String,
           value: "http://127.0.0.1:5001/api/v0"
         }
+      },
+
+      _fireBodyEvent: function(eventName, detail) {
+        document.body.dispatchEvent(new CustomEvent(eventName, { detail }));
+      },
+
+      _logError: function(err) {
+        console.error(err);
+      },
+
+      _processObjectStream: function(objstream) {
+        let chunks = '';
+
+        objstream.on('data', (obj) => {
+          chunks += obj.toString();
+        }).once('end', () => {
+          this._fireBodyEvent('file-read', chunks);
+        });
       },
 
       getFile: function(e) {
@@ -33,42 +54,18 @@
       },
 
       ready: function() {
-        this._getSwarmPeers = this.getSwarmPeers.bind(this);
-        this._getFile = this.getFile.bind(this);
-        this._addFile = this.addFile.bind(this);
-      },
-
-      attached: function() {
         this.ipfs = IpfsApi('localhost', '5001');
 
-        document.body.addEventListener('get-swarm-peers', this._getSwarmPeers);
-        document.body.addEventListener('get-file', this._getFile);
-        document.body.addEventListener('add-file', this._addFile);
+        document.body.addEventListener('get-swarm-peers', this.getSwarmPeers.bind(this));
+        document.body.addEventListener('get-file', this.getFile.bind(this));
+        document.body.addEventListener('add-file', this.addFile.bind(this));
       },
 
       detached: function() {
-        document.body.removeEventListener('get-swarm-peers', this._getSwarmPeers);
-        document.body.removeEventListener('get-file', this._getFile);
-        document.body.removeEventListener('add-file', this._addFile);
-      },
-
-      _fireBodyEvent: function(eventName, detail) {
-        document.body.dispatchEvent(new CustomEvent(eventName, { detail }));
-      },
-
-      _logError: function(err) {
-        console.error(err);
-      },
-
-      _processObjectStream: function(objstream) {
-        let chunks = '';
-
-        objstream.on('data', (obj) => {
-          chunks += obj.toString();
-        }).once('end', () => {
-          this._fireBodyEvent('file-read', chunks);
-        });
-      },
+        document.body.removeEventListener('get-swarm-peers', this.getSwarmPeers.bind(this));
+        document.body.removeEventListener('get-file', this.getFile.bind(this));
+        document.body.removeEventListener('add-file', this.addFile.bind(this));
+      }
     })
   </script>
 </dom-module>

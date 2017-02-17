@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/ip-app/ip-app.html",
+  "shell": "src/ip-app.html",
   "fragments": [
   ],
   "sources": [
