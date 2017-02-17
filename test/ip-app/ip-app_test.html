@@ -9,7 +9,7 @@
     <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../../web-component-tester/browser.js"></script>
 
-    <link rel="import" href="../../src/ip-app/ip-app.html">
+    <link rel="import" href="../../src/ip-app.html">
   </head>
   <body>
     <test-fixture id="basic">
@@ -59,6 +59,7 @@
 
         test('upload button shows progress bar', function() {
           var element = fixture('basic');
+          element.$.paste.value="testing 123";
           element.getElementsByTagName('button')[0].click();
           assert.equal(!!element.getElementsByTagName('paper-progress')[0].attributes.visible, true);
         });

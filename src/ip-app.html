@@ -1,14 +1,17 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 
-<link rel="import" href="./shared-styles.html">
+<link rel="import" href="ipfs-api.html">
+<link rel="import" href="shared-styles.html">
 
 <dom-module id="ip-app">
   <template>
     <style include="shared-styles">
       p { text-align: center; }
     </style>
+
+    <ipfs-api></ipfs-api>
 
     <paper-progress visible$="{{isUploading}}" id="progress" indeterminate></paper-progress>
 
