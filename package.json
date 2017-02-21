@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "polymer test",
-    "start": "polymer serve"
+    "start": "polymer serve",
+    "build": "polymer build"
   },
   "repository": {
     "type": "git",
