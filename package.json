@@ -1,0 +1,29 @@
+{
+  "name": "interplanetary-pastebin",
+  "version": "1.0.0",
+  "description": "A permanent pastebin built on ipfs",
+  "main": "index.html",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "polymer test",
+    "start": "polymer serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aphelionz/InterplanetaryPastebin.git"
+  },
+  "keywords": [
+    "ipfs"
+  ],
+  "author": "Mark Robert Henderson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aphelionz/InterplanetaryPastebin/issues"
+  },
+  "homepage": "https://github.com/aphelionz/InterplanetaryPastebin#readme",
+  "devDependencies": {
+    "polymer-cli": "^0.17.0"
+  }
+}
