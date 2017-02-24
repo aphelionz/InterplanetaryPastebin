@@ -1,0 +1,36 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="ipfs-peers">
+  <template>
+    <style>
+      :host { display: block; }
+    </style>
+
+    <small>Connected to {{peers}} peers.</small>
+  </template>
+
+  <script>
+    Polymer({
+      is: "ipfs-peers",
+
+      properties: {
+        peers: {
+          notify: true,
+          type: Number,
+          value: 0
+        }
+      },
+
+      _getPeers: function() {
+        document.body.dispatchEvent(new CustomEvent('get-swarm-peers'));
+      },
+
+      ready: function() {
+        document.body.addEventListener('peers', (e) => this.peers = e.detail.length);
+
+        this._getPeers();
+        setInterval(this._getPeers.bind(this), 10000);
+      }
+    })
+  </script>
+</dom-module>

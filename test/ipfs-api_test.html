@@ -85,6 +85,7 @@
           var element = fixture('basic');
           var test = function(e) {
             done();
+            assert.equal(!!e.detail, true);
             document.body.removeEventListener('file-added', test);
           };
 

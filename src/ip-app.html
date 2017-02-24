@@ -2,6 +2,8 @@
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 
 <link rel="import" href="ipfs-api.html">
+<link rel="import" href="ipfs-peers.html">
+<link rel="import" href="ipfs-info.html">
 <link rel="import" href="shared-styles.html">
 <!--<link rel="import" href="ip-language-selector.html">-->
 
@@ -37,7 +39,8 @@
 
     <textarea id="editor" rows="20" on-keyup="_copyAndHighlight"></textarea>
 
-    <p><small>Connected to {{peers}} peers.</small></p>
+    <ipfs-peers></ipfs-peers>
+    <ipfs-info></ipfs-info>
   </template>
 
   <script>
@@ -45,11 +48,6 @@
       is: 'ip-app',
 
       properties: {
-        peers: {
-          notify: true,
-          type: Number,
-          value: 0
-        },
         hasContent: {
           notify: true,
           type: Boolean,
@@ -72,13 +70,8 @@
         this.$.paste.innerHTML = this.$.editor.value;
 
         this.debounce("highlight", () => {
-          console.log("highlight");
           hljs.highlightBlock(this.$.paste);
         }, 1000);
-      },
-
-      _getPeers: function() {
-        document.body.dispatchEvent(new CustomEvent('get-swarm-peers'));
       },
 
       _keyChanged: function() {
@@ -93,15 +86,12 @@
       },
 
       ready: function() {
-        document.body.addEventListener('peers', (e) => this.peers = e.detail.length);
         document.body.addEventListener('file-read', (e) => {
           this.$.editor.value = e.detail;
           this._copyAndHighlight();
         });
 
         this._copyAndHighlight();
-        this._getPeers();
-        setInterval(this._getPeers.bind(this), 10000);
       }
     });
   </script>

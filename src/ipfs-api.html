@@ -25,6 +25,12 @@
         });
       },
 
+      getIpfsID: function(e) {
+         ipfs.id()
+          .then((info) => this._fireBodyEvent('ipfs-id', info))
+          .catch(this._logError);
+      },
+
       getFile: function(e) {
         ipfs.files.cat(e.detail)
           .then((objstream) => this._processObjectStream(objstream))
@@ -45,12 +51,14 @@
 
       ready: function() {
         document.body.addEventListener('get-swarm-peers', this.getSwarmPeers.bind(this));
+        document.body.addEventListener('get-ipfs-id', this.getIpfsID.bind(this));
         document.body.addEventListener('get-file', this.getFile.bind(this));
         document.body.addEventListener('add-file', this.addFile.bind(this));
       },
 
       detached: function() {
         document.body.removeEventListener('get-swarm-peers', this.getSwarmPeers.bind(this));
+        document.body.removeEventListener('get-ipfs-id', this.getIpfsID.bind(this));
         document.body.removeEventListener('get-file', this.getFile.bind(this));
         document.body.removeEventListener('add-file', this.addFile.bind(this));
       }

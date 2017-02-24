@@ -1,0 +1,34 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="ipfs-info">
+  <template>
+    <style>
+      :host { display: block; }
+    </style>
+
+    <small>id: {{ipfsInfo.id}}</small>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'ipfs-info',
+
+      properties: {
+        ipfsInfo: {
+          notify: true,
+          type: Object,
+          value: 0
+        }
+      },
+
+      _getId: function() {
+        document.body.dispatchEvent(new CustomEvent('get-ipfs-id'));
+      },
+
+      ready: function() {
+        document.body.addEventListener('ipfs-id', (e) => this.ipfsInfo = e.detail);
+        this._getId();
+      }
+    });
+  </script>
+</dom-module>
