@@ -1,21 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
-<script src="https://unpkg.com/ipfs-api/dist/index.js"></script>
-<script src="../js/buffer.js"></script>
-
 <dom-module id="ipfs-api">
   <script>
     "use strict";
 
     Polymer({
       is: "ipfs-api",
-
-      properties: {
-        urlBase: {
-          type: String,
-          value: "http://127.0.0.1:5001/api/v0"
-        }
-      },
 
       _fireBodyEvent: function(eventName, detail) {
         document.body.dispatchEvent(new CustomEvent(eventName, { detail }));
@@ -36,26 +26,24 @@
       },
 
       getFile: function(e) {
-        this.ipfs.cat(e.detail)
+        ipfs.files.cat(e.detail)
           .then((objstream) => this._processObjectStream(objstream))
           .catch(this._logError);
       },
 
       getSwarmPeers: function() {
-        this.ipfs.swarm.peers()
+        ipfs.swarm.peers()
           .then((peers) => this._fireBodyEvent('peers', peers))
           .catch(this._logError);
       },
 
       addFile: function(e) {
-        this.ipfs.add([new buffer.Buffer(e.detail)])
+        ipfs.files.add([new buffer.Buffer(e.detail)])
           .then((result) => this._fireBodyEvent('file-added', result[0].hash))
           .catch(this._logError);
       },
 
       ready: function() {
-        this.ipfs = IpfsApi('localhost', '5001');
-
         document.body.addEventListener('get-swarm-peers', this.getSwarmPeers.bind(this));
         document.body.addEventListener('get-file', this.getFile.bind(this));
         document.body.addEventListener('add-file', this.addFile.bind(this));

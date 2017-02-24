@@ -1,14 +1,19 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 
 <link rel="import" href="ipfs-api.html">
 <link rel="import" href="shared-styles.html">
+<!--<link rel="import" href="ip-language-selector.html">-->
 
 <dom-module id="ip-app">
   <template>
     <style include="shared-styles">
       p { text-align: center; }
+
+      textarea {
+        font-family: monospace;
+        width: 100%;
+      }
     </style>
 
     <ipfs-api></ipfs-api>
@@ -26,22 +31,18 @@
       <button visible$="{{hasContent}}" on-tap="uploadForever">Upload Forever</button>
     </header>
 
-    <paper-textarea
-        id="paste"
-        on-keyup="showButton"
-        max-rows="17"
-        rows="17"
-        label="Paste content here"
-    >
-    </paper-textarea>
+    <!--<ip-language-selector selection="{{language}}"></ip-language-selector>-->
+
+    <pre><code id="paste"></code></pre>
+
+    <textarea id="editor" rows="20" on-keyup="_copyAndHighlight"></textarea>
 
     <p><small>Connected to {{peers}} peers.</small></p>
   </template>
 
   <script>
     Polymer({
-
-    is: 'ip-app',
+      is: 'ip-app',
 
       properties: {
         peers: {
@@ -66,34 +67,41 @@
         }
       },
 
+      _copyAndHighlight(e) {
+        if(e) this.hasContent = true;
+        this.$.paste.innerHTML = this.$.editor.value;
+
+        this.debounce("highlight", () => {
+          console.log("highlight");
+          hljs.highlightBlock(this.$.paste);
+        }, 1000);
+      },
+
       _getPeers: function() {
         document.body.dispatchEvent(new CustomEvent('get-swarm-peers'));
-          document.body.addEventListener('peers', function(e) {
-          this.peers = e.detail.length;
-        }.bind(this));
       },
 
       _keyChanged: function() {
         document.body.dispatchEvent(new CustomEvent('get-file', { detail: this.key }));
       },
 
-      showButton: function() { this.hasContent = true; },
-
       uploadForever: function() {
         this.isUploading = true;
         document.body.dispatchEvent(new CustomEvent('add-file', {
-          detail: this.$.paste.value
+          detail: this.$.editor.value
         }));
       },
 
       ready: function() {
-        setInterval(this._getPeers.bind(this), 10000);
-        this._getPeers();
+        document.body.addEventListener('peers', (e) => this.peers = e.detail.length);
+        document.body.addEventListener('file-read', (e) => {
+          this.$.editor.value = e.detail;
+          this._copyAndHighlight();
+        });
 
-        document.body.addEventListener('file-read', function(e) {
-          this.$.paste.value = e.detail;
-        }.bind(this)
-        )
+        this._copyAndHighlight();
+        this._getPeers();
+        setInterval(this._getPeers.bind(this), 10000);
       }
     });
   </script>
