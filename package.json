@@ -9,7 +9,8 @@
   "scripts": {
     "test": "polymer test",
     "start": "polymer serve",
-    "build": "polymer build"
+    "build": "polymer build",
+    "preview": "polymer serve build/bundled"
   },
   "repository": {
     "type": "git",

@@ -10,11 +10,35 @@
 <dom-module id="ip-app">
   <template>
     <style include="shared-styles">
+      :host {
+        z-index: 9999;
+      }
+
       p { text-align: center; }
 
       textarea {
+        z-index: 8;
         font-family: monospace;
-        width: 100%;
+        width: 49.5%;
+        margin: 0 1% 1% 0;
+        padding: 0.5em;
+        background: #0f1211;
+        color: white;
+        border: none;
+      }
+
+      pre {
+        background: #282828;
+        width: 49.5%;
+        margin: 0;
+      }
+
+      textarea, pre {
+        height: 350px;
+      }
+
+      .layout {
+        display: flex;
       }
     </style>
 
@@ -35,9 +59,10 @@
 
     <!--<ip-language-selector selection="{{language}}"></ip-language-selector>-->
 
-    <pre><code id="paste"></code></pre>
-
-    <textarea id="editor" rows="20" on-keyup="_copyAndHighlight"></textarea>
+    <div class="layout horizontal">
+      <textarea id="editor" on-keyup="_copyAndHighlight"></textarea>
+      <pre><code class="bash" id="paste"></code></pre>
+    </div>
 
     <ipfs-peers></ipfs-peers>
     <ipfs-info></ipfs-info>
@@ -67,7 +92,10 @@
 
       _copyAndHighlight(e) {
         if(e) this.hasContent = true;
-        this.$.paste.innerHTML = this.$.editor.value;
+        this.$.paste.innerHTML  = this.$.editor.value.replace(/[\u00A0-\u9999<>\&]/gim,
+          function(i) {
+           return '&#'+i.charCodeAt(0)+';';
+          });
 
         this.debounce("highlight", () => {
           hljs.highlightBlock(this.$.paste);
