@@ -1,0 +1,103 @@
+<dom-module id="ip-versioning">
+  <template>
+    <style>
+      a { display: none; }
+      a[href] { display: inline;}
+    </style>
+
+
+    <a href$=[[prevURL]]>Prev</a>
+    <a href$=[[nextURL]]>Next</a>
+    <a>Start Over</a>
+  </template>
+  <script>
+    Polymer({
+      is: "ip-versioning",
+
+      properties: {
+        nextURL: {
+          type: String,
+          notify: true
+        },
+        prevURL: {
+          type: String,
+          notify: true
+        }
+
+      },
+
+      _recordVersion: function(e) {
+        let node = this.graph.filter((d) => d.hash === this.cursor)[0];
+        if(!node) return;
+        if(!node.next) node.next = [];
+        node.next.push(e.detail);
+        this.graph.push({
+          timestamp: Date.now(),
+          hash: e.detail,
+          prev: this.cursor
+        });
+        this._updateGraph();
+      },
+
+      _setGraphHash: function(hash) {
+        localStorage.setItem('graphHash', hash)
+      },
+
+      _setURLs: function() {
+        let node = this.graph.filter((d) => d.hash === this.cursor)[0];
+        if(node.next) {
+          this.nextURL = '#' + node.next[0];
+        }
+        if(node.prev) {
+          this.prevURL = '#' + node.prev;
+        }
+      },
+
+      _updateGraph: function() {
+        ipfs.files.add([new buffer.Buffer(JSON.stringify(this.graph))])
+            .then((response) => response[0].hash)
+            .then(this._setGraphHash)
+            .catch(this._logError);
+      },
+
+      // TODO: Move this away
+      _processObjectStream: function(objstream) {
+        let chunks = '';
+
+        let promise = new Promise((resolve, reject) => {
+          objstream.on('data', (obj) => {
+            chunks += obj.toString();
+          }).once('end', () => {
+            resolve(chunks)
+          });
+        });
+
+        return promise;
+      },
+
+      ready: function() {
+        this.cursor = window.location.hash.substr(1);
+        let graphHash = localStorage.getItem('graphHash');
+
+        if(!graphHash) {
+          this.graph = [{
+            "timestamp": Date.now(),
+            "hash": this.cursor
+          }];
+          this._updateGraph();
+          this._setURLs();
+        } else {
+          ipfs.files.cat(graphHash)
+            .then(this._processObjectStream)
+            .then((result) => {
+              this.graph = JSON.parse(result);
+              console.log(this.graph);
+              this._setURLs();
+            })
+        }
+
+        document.body.addEventListener('file-added', this._recordVersion.bind(this))
+      }
+    })
+  </script>
+</dom-module>

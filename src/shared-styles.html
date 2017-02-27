@@ -3,27 +3,11 @@
 <dom-module id="shared-styles">
   <style>
     :host {
-      color: white;
+      color: black;
       font-family: monospace;
       max-width: 1024px;
       margin: 0 auto;
       display: block;
-
-      --paper-input-container: {
-        background: rgba(0,0,0,0.67);
-      };
-
-      --paper-input-container-color: black;
-      --paper-input-container-focus-color: limegreen;
-
-      --paper-input-container-label: {
-        color: lightgreen;
-        font-family: monospace;
-      };
-
-      --paper-input-container-label-focus: {
-        color: white;
-      };
     }
 
     h1 {
@@ -49,6 +33,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      position: relative;
     }
 
     button[visible] {
@@ -66,6 +51,60 @@
 
     paper-progress[visible] {
       visibility: visible;
+    }
+
+    textarea {
+      font-family: monospace;
+      width: calc(100% - 15px);
+      padding: 0.5em;
+      background-color: #e1e1e1;
+      color: black;
+      border: none;
+      border-bottom: 2px solid white;
+      position: relative;
+      transition: border-bottom 1s, background-color 1s;
+    }
+
+    textarea:focus {
+      border-bottom: 2px solid lightgreen;
+      outline: none;
+    }
+
+    textarea::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+      color: lightgreen;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    textarea::-moz-placeholder { /* Firefox 19+ */
+      color: lightgreen;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    textarea:-ms-input-placeholder { /* IE 10+ */
+      color: lightgreen;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    textarea:-moz-placeholder { /* Firefox 18- */
+      color: lightgreen;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    textarea::placeholder {
+      color: lightgreen;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    textarea:placeholder-shown {
+      background: transparent;
+    }
+
+    a, a:visited {
+      color: black;
+      text-decoration: none;
+      text-shadow: 1px 1px 0 #fff, -1px 1px 0 #fff, 2px 0 0 #fff, -2px 0 0 #fff;
+      box-shadow: inset 0 -1px 0 0 #fff, inset 0 -3px 0 0 black;
     }
   </style>
 </dom-module>

@@ -18,34 +18,45 @@
       _processObjectStream: function(objstream) {
         let chunks = '';
 
-        objstream.on('data', (obj) => {
-          chunks += obj.toString();
-        }).once('end', () => {
-          this._fireBodyEvent('file-read', chunks);
+        let promise = new Promise((resolve, reject) => {
+          objstream.on('data', (obj) => {
+            chunks += obj.toString();
+          }).once('end', () => {
+            resolve(chunks)
+          });
         });
+
+        return promise;
       },
 
       getIpfsID: function(e) {
-         ipfs.id()
-          .then((info) => this._fireBodyEvent('ipfs-id', info))
+        ipfs.id()
+          .then(this._fireBodyEvent.bind(this, 'ipfs-id'))
           .catch(this._logError);
       },
 
       getFile: function(e) {
+        let eventKey = 'file-read';
+        if(e.detail.context) {
+          eventKey = 'file-read-' + e.detail.context;
+        }
+
         ipfs.files.cat(e.detail)
-          .then((objstream) => this._processObjectStream(objstream))
+          .then(this._processObjectStream)
+          .then(this._fireBodyEvent.bind(this, eventKey))
           .catch(this._logError);
       },
 
       getSwarmPeers: function() {
         ipfs.swarm.peers()
-          .then((peers) => this._fireBodyEvent('peers', peers))
+          .then(this._fireBodyEvent.bind(this, 'peers'))
           .catch(this._logError);
       },
 
       addFile: function(e) {
         ipfs.files.add([new buffer.Buffer(e.detail)])
-          .then((result) => this._fireBodyEvent('file-added', result[0].hash))
+          .then((response) => response[0].hash)
+          .then(this._fireBodyEvent.bind(this, 'file-added'))
           .catch(this._logError);
       },
 

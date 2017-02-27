@@ -1,11 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 
+<link rel="import" href="ip-versioning.html">
 <link rel="import" href="ipfs-api.html">
 <link rel="import" href="ipfs-peers.html">
 <link rel="import" href="ipfs-info.html">
 <link rel="import" href="shared-styles.html">
-<!--<link rel="import" href="ip-language-selector.html">-->
 
 <dom-module id="ip-app">
   <template>
@@ -16,56 +15,35 @@
 
       p { text-align: center; }
 
-      textarea {
-        z-index: 8;
-        font-family: monospace;
-        width: 49.5%;
-        margin: 0 1% 1% 0;
-        padding: 0.5em;
-        background: #0f1211;
-        color: white;
-        border: none;
-      }
-
-      pre {
-        background: #282828;
-        width: 49.5%;
-        margin: 0;
-      }
-
-      textarea, pre {
-        height: 350px;
-      }
-
       .layout {
         display: flex;
+      }
+
+      #hud {
+        text-align: right;
+        position: absolute;
+        bottom: 0;
+        right: 0;
       }
     </style>
 
     <ipfs-api></ipfs-api>
 
-    <paper-progress visible$="{{isUploading}}" id="progress" indeterminate></paper-progress>
-
     <header>
       <div>
-        <h1>the interplanetary pastebin</h1>
-        <small>
-          A permanent paste bin powered by
-          <a style="color: white" href="http://ipfs.io/" target="_blank">ipfs</a>
-        </small>
+        <h1>the <a href="http://ipfs.io/" target="_blank">interplanetary</a> pastebin</h1>
       </div>
-      <button visible$="{{hasContent}}" on-tap="uploadForever">Upload Forever</button>
+      <button visible$="{{hasContent}}" on-tap="uploadForever">Save Version</button>
     </header>
 
-    <!--<ip-language-selector selection="{{language}}"></ip-language-selector>-->
+    <ip-versioning></ip-versioning>
+    <textarea rows=30 placeholder="Begin entry..." id="editor" on-keyup="_showButton"></textarea>
 
-    <div class="layout horizontal">
-      <textarea id="editor" on-keyup="_copyAndHighlight"></textarea>
-      <pre><code class="bash" id="paste"></code></pre>
+    <div id="hud">
+      <ipfs-peers></ipfs-peers>
+      <ipfs-info></ipfs-info>
     </div>
 
-    <ipfs-peers></ipfs-peers>
-    <ipfs-info></ipfs-info>
   </template>
 
   <script>
@@ -90,20 +68,12 @@
         }
       },
 
-      _copyAndHighlight(e) {
-        if(e) this.hasContent = true;
-        this.$.paste.innerHTML  = this.$.editor.value.replace(/[\u00A0-\u9999<>\&]/gim,
-          function(i) {
-           return '&#'+i.charCodeAt(0)+';';
-          });
-
-        this.debounce("highlight", () => {
-          hljs.highlightBlock(this.$.paste);
-        }, 1000);
-      },
-
       _keyChanged: function() {
         document.body.dispatchEvent(new CustomEvent('get-file', { detail: this.key }));
+      },
+
+      _showButton: function() {
+        this.hasContent = true;
       },
 
       uploadForever: function() {
@@ -116,10 +86,7 @@
       ready: function() {
         document.body.addEventListener('file-read', (e) => {
           this.$.editor.value = e.detail;
-          this._copyAndHighlight();
         });
-
-        this._copyAndHighlight();
       }
     });
   </script>
