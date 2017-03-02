@@ -1,7 +1,10 @@
 {
-  "name": "InterplanetaryPastebin",
+  "name": "Interplanetary Pastebin",
   "short_name": "InterplanetaryPastebin",
-  "description": "Interplanetary Pastebin",
-  "start_url": "/",
+  "description": "A pastebin app that uses the Interplanetary Pastebin as its backend.",
+  "start_url": "/index.html",
+  "icons": [
+    {}
+  ],
   "display": "standalone"
 }

@@ -23,7 +23,6 @@
           type: String,
           notify: true
         }
-
       },
 
       _recordVersion: function(e) {
@@ -37,6 +36,7 @@
           prev: this.cursor
         });
         this._updateGraph();
+        this.cursor = e.detail;
       },
 
       _setGraphHash: function(hash) {
@@ -64,15 +64,13 @@
       _processObjectStream: function(objstream) {
         let chunks = '';
 
-        let promise = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
           objstream.on('data', (obj) => {
             chunks += obj.toString();
           }).once('end', () => {
             resolve(chunks)
           });
         });
-
-        return promise;
       },
 
       ready: function() {
